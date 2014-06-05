@@ -1,0 +1,650 @@
+  openlca_version (
+-    eclipse [varchar(255)]
+-    id [varchar(36)]
+-    name [varchar(255)]
+-    no [varchar(255)]
++    version [smallint(6)]
+  )
+
++ sequence (
++    SEQ_COUNT [bigint(20)]
++    SEQ_NAME [varchar(255)]
++ )
+
+  tbl_actors (
+     address [varchar(255)]
+-    categoryid [varchar(255)]
+     city [varchar(255)]
+     country [varchar(255)]
+     description [text]
+     email [varchar(255)]
++    f_category [bigint(20)]
+-    id [varchar(36)]
++    id [bigint(20)]
++    last_change [bigint(20)]
+     name [varchar(255)]
++    ref_id [varchar(36)]
+     telefax [varchar(255)]
+     telephone [varchar(255)]
++    version [bigint(20)]
+     website [varchar(255)]
+-    zipcode [varchar(255)]
++    zip_code [varchar(255)]
+  )
+
+- tbl_admininfos (
+-    accessanduserestrictions [text]
+-    copyright [tinyint(1)]
+-    creationdate [date]
+-    f_datadocumentor [varchar(36)]
+-    f_datagenerator [varchar(36)]
+-    f_datasetowner [varchar(36)]
+-    f_publication [varchar(36)]
+-    id [varchar(36)]
+-    intendedapplication [text]
+-    lastchange [date]
+-    project [varchar(255)]
+-    version [varchar(255)]
+- )
+
+- tbl_allocationfactors (
+-    f_exchange [varchar(36)]
+-    id [varchar(36)]
+-    productid [varchar(36)]
+-    value [double]
+- )
+
++ tbl_allocation_factors (
++    allocation_type [varchar(255)]
++    f_exchange [bigint(20)]
++    f_process [bigint(20)]
++    f_product [bigint(20)]
++    id [bigint(20)]
++    value [double]
++ )
+
+  tbl_categories (
+-    componentclass [varchar(255)]
+-    f_parentcategory [varchar(255)]
++    description [text]
++    f_parent_category [bigint(20)]
+-    id [varchar(255)]
++    id [bigint(20)]
++    model_type [varchar(255)]
+     name [varchar(255)]
++    ref_id [varchar(36)]
+  )
+
+  tbl_cost_categories (
+     description [text]
+-    fix [tinyint(1)]
++    fix [tinyint(4)]
+-    id [varchar(36)]
++    id [bigint(20)]
+     name [varchar(255)]
+  )
+
+  tbl_exchanges (
+-    avoidedproduct [tinyint(1)]
++    avoided_product [tinyint(4)]
+     base_uncertainty [double]
+-    distributionType [int(11)]
++    distribution_type [int(11)]
+-    f_default_provider [varchar(36)]
++    f_default_provider [bigint(20)]
+-    f_flow [varchar(36)]
++    f_flow [bigint(20)]
+-    f_flowpropertyfactor [varchar(36)]
++    f_flow_property_factor [bigint(20)]
+-    f_owner [varchar(36)]
++    f_owner [bigint(20)]
+-    f_unit [varchar(36)]
++    f_unit [bigint(20)]
+-    id [varchar(36)]
++    id [bigint(20)]
+-    input [tinyint(1)]
++    is_input [tinyint(4)]
+-    parameter1_formula [varchar(255)]
++    parameter1_formula [varchar(1000)]
+     parameter1_value [double]
+-    parameter2_formula [varchar(255)]
++    parameter2_formula [varchar(1000)]
+     parameter2_value [double]
+-    parameter3_formula [varchar(255)]
++    parameter3_formula [varchar(1000)]
+     parameter3_value [double]
+-    parametrized [tinyint(1)]
+     pedigree_uncertainty [varchar(50)]
+-    resultingamount_formula [varchar(255)]
+-    resultingamount_value [double]
++    resulting_amount_formula [varchar(1000)]
++    resulting_amount_value [double]
+  )
+
+- tbl_flowproperties (
+-    categoryid [varchar(36)]
+-    description [text]
+-    flowpropertytype [int(11)]
+-    id [varchar(36)]
+-    name [varchar(255)]
+-    unitgroupid [varchar(36)]
+- )
+
+- tbl_flowpropertyfactors (
+-    conversionfactor [double]
+-    f_flowinformation [varchar(36)]
+-    f_flowproperty [varchar(36)]
+-    id [varchar(36)]
+- )
+
++ tbl_flow_properties (
++    description [text]
++    f_category [bigint(20)]
++    f_unit_group [bigint(20)]
++    flow_property_type [varchar(255)]
++    id [bigint(20)]
++    last_change [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    version [bigint(20)]
++ )
+
++ tbl_flow_property_factors (
++    conversion_factor [double]
++    f_flow [bigint(20)]
++    f_flow_property [bigint(20)]
++    id [bigint(20)]
++ )
+
+  tbl_flows (
+     cas_number [varchar(255)]
+-    categoryid [varchar(36)]
+     description [text]
++    f_category [bigint(20)]
+-    f_location [varchar(36)]
++    f_location [bigint(20)]
+-    f_reference_flow_property [varchar(36)]
++    f_reference_flow_property [bigint(20)]
+-    flowtype [int(11)]
++    flow_type [varchar(255)]
+     formula [varchar(255)]
+-    id [varchar(36)]
++    id [bigint(20)]
+-    infrastructure_flow [tinyint(1)]
++    infrastructure_flow [tinyint(4)]
++    last_change [bigint(20)]
+     name [varchar(255)]
++    ref_id [varchar(36)]
++    version [bigint(20)]
+  )
+
+- tbl_lciacategories (
+-    description [text]
+-    f_lciamethod [varchar(36)]
+-    id [varchar(36)]
+-    name [varchar(255)]
+-    referenceunit [varchar(255)]
+- )
+
+- tbl_lciacategoryresults (
+-    category [varchar(255)]
+-    category_id [varchar(36)]
+-    f_lciaresult [varchar(36)]
+-    id [varchar(36)]
+-    normalizationfactor [double]
+-    standarddeviation [double]
+-    unit [varchar(255)]
+-    value [double]
+-    weightingfactor [double]
+-    weightingunit [varchar(255)]
+- )
+
+- tbl_lciafactors (
+-    f_flow [varchar(36)]
+-    f_flowpropertyfactor [varchar(36)]
+-    f_lciacategory [varchar(36)]
+-    f_unit [varchar(36)]
+-    id [varchar(36)]
+-    uncertainty_parameter_1 [double]
+-    uncertainty_parameter_2 [double]
+-    uncertainty_parameter_3 [double]
+-    uncertainy_type [varchar(50)]
+-    value [double]
+- )
+
+- tbl_lciamethods (
+-    categoryid [varchar(36)]
+-    description [text]
+-    id [varchar(36)]
+-    name [varchar(255)]
+- )
+
+- tbl_lciaresults (
+-    categoryid [varchar(255)]
+-    description [text]
+-    id [varchar(36)]
+-    lciamethod [varchar(255)]
+-    name [varchar(255)]
+-    nwset [varchar(255)]
+-    product [varchar(255)]
+-    productsystem [varchar(255)]
+-    targetamount [double]
+-    unit [varchar(255)]
+-    weightingunit [varchar(255)]
+- )
+
+- tbl_lciresults (
+-    calculationmethod [varchar(255)]
+-    id [varchar(36)]
+-    product [varchar(255)]
+-    productsystem [varchar(255)]
+-    targetamount [double]
+-    unit [varchar(255)]
+- )
+
++ tbl_impact_categories (
++    description [text]
++    f_impact_method [bigint(20)]
++    id [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    reference_unit [varchar(255)]
++ )
+
++ tbl_impact_factors (
++    distribution_type [int(11)]
++    f_flow [bigint(20)]
++    f_flow_property_factor [bigint(20)]
++    f_impact_category [bigint(20)]
++    f_unit [bigint(20)]
++    formula [varchar(1000)]
++    id [bigint(20)]
++    parameter1_formula [varchar(1000)]
++    parameter1_value [double]
++    parameter2_formula [varchar(1000)]
++    parameter2_value [double]
++    parameter3_formula [varchar(1000)]
++    parameter3_value [double]
++    value [double]
++ )
+
++ tbl_impact_methods (
++    description [text]
++    f_category [bigint(20)]
++    id [bigint(20)]
++    last_change [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    version [bigint(20)]
++ )
+
+  tbl_locations (
+     code [varchar(255)]
+     description [text]
+-    id [varchar(36)]
++    id [bigint(20)]
++    kmz [mediumblob]
+     latitude [double]
+     longitude [double]
+     name [varchar(255)]
++    ref_id [varchar(36)]
+  )
+
+- tbl_mappings (
+-    external_key [varchar(255)]
+-    external_name [varchar(255)]
+-    factor [double]
+-    format [varchar(50)]
+-    id [varchar(50)]
+-    map_type [varchar(50)]
+-    olca_id [varchar(36)]
+- )
+
+- tbl_modelingandvalidation_source (
+-    f_modelingandvalidation [varchar(36)]
+-    f_source [varchar(36)]
+- )
+
+- tbl_modelingandvalidations (
+-    datacollectionperiod [text]
+-    datacompleteness [text]
+-    dataselection [text]
+-    datasetotherevaluation [text]
+-    datatreatment [text]
+-    f_reviewer [varchar(36)]
+-    id [varchar(36)]
+-    lcimethod [text]
+-    modelingconstants [text]
+-    sampling [text]
+- )
+
+- tbl_normalizationweightingfactors (
+-    f_lciacategory [varchar(36)]
+-    f_normalizationweightingset [varchar(255)]
+-    id [varchar(255)]
+-    normalizationfactor [double]
+-    weightingfactor [double]
+- )
+
+- tbl_normalizationweightingsets (
+-    f_lciamethod [varchar(36)]
+-    id [varchar(255)]
+-    referencesystem [varchar(255)]
+-    unit [varchar(255)]
+- )
+
++ tbl_mapping_files (
++    content [mediumblob]
++    file_name [varchar(255)]
++    id [bigint(20)]
++ )
+
++ tbl_nw_factors (
++    f_impact_category [bigint(20)]
++    f_nw_set [bigint(20)]
++    id [bigint(20)]
++    normalisation_factor [double]
++    weighting_factor [double]
++ )
+
++ tbl_nw_sets (
++    description [text]
++    f_impact_method [bigint(20)]
++    id [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    weighted_score_unit [varchar(255)]
++ )
+
++ tbl_parameter_redefs (
++    context_type [varchar(255)]
++    distribution_type [int(11)]
++    f_context [bigint(20)]
++    f_owner [bigint(20)]
++    id [bigint(20)]
++    name [varchar(255)]
++    parameter1_formula [varchar(1000)]
++    parameter1_value [double]
++    parameter2_formula [varchar(1000)]
++    parameter2_value [double]
++    parameter3_formula [varchar(1000)]
++    parameter3_value [double]
++    value [double]
++ )
+
+  tbl_parameters (
+     description [text]
+-    expression_formula [varchar(255)]
+-    expression_parametrized [tinyint(1)]
+-    expression_value [double]
++    distribution_type [int(11)]
++    external_source [varchar(255)]
+-    f_owner [varchar(36)]
++    f_owner [bigint(20)]
++    formula [varchar(1000)]
+-    id [varchar(36)]
++    id [bigint(20)]
++    is_input_param [tinyint(4)]
+     name [varchar(255)]
+-    type [int(11)]
++    parameter1_formula [varchar(1000)]
++    parameter1_value [double]
++    parameter2_formula [varchar(1000)]
++    parameter2_value [double]
++    parameter3_formula [varchar(1000)]
++    parameter3_value [double]
++    scope [varchar(255)]
++    source_type [varchar(255)]
++    value [double]
+  )
+
++ tbl_process_cost_entries (
++    amount [double]
++    f_cost_category [bigint(20)]
++    f_exchange [bigint(20)]
++    f_process [bigint(20)]
++    id [bigint(20)]
++ )
+
++ tbl_process_docs (
++    completeness [text]
++    copyright [tinyint(4)]
++    creation_date [timestamp]
++    data_collection_period [text]
++    data_selection [text]
++    data_treatment [text]
++    f_data_documentor [bigint(20)]
++    f_data_generator [bigint(20)]
++    f_dataset_owner [bigint(20)]
++    f_publication [bigint(20)]
++    f_reviewer [bigint(20)]
++    geography [text]
++    id [bigint(20)]
++    intended_application [text]
++    inventory_method [text]
++    modeling_constants [text]
++    project [varchar(255)]
++    restrictions [text]
++    review_details [text]
++    sampling [text]
++    technology [text]
++    time [text]
++    valid_from [date]
++    valid_until [date]
++ )
+
+  tbl_process_group_sets (
+     groups_blob [mediumblob]
+-    id [varchar(36)]
++    id [bigint(20)]
+     name [varchar(255)]
+  )
+
++ tbl_process_links (
++    f_flow [bigint(20)]
++    f_product_system [bigint(20)]
++    f_provider [bigint(20)]
++    f_recipient [bigint(20)]
++ )
+
++ tbl_process_sources (
++    f_process_doc [bigint(20)]
++    f_source [bigint(20)]
++ )
+
+  tbl_processes (
+-    allocationmethod [int(11)]
+-    categoryid [varchar(36)]
++    default_allocation_method [varchar(255)]
+     description [text]
++    f_category [bigint(20)]
+-    f_location [varchar(36)]
++    f_location [bigint(20)]
+-    f_quantitativereference [varchar(36)]
+-    geographycomment [text]
++    f_process_doc [bigint(20)]
++    f_quantitative_reference [bigint(20)]
+-    id [varchar(36)]
++    id [bigint(20)]
+-    infrastructureprocess [tinyint(1)]
++    infrastructure_process [tinyint(4)]
++    kmz [mediumblob]
++    last_change [bigint(20)]
+     name [varchar(255)]
+-    processtype [int(11)]
++    process_type [varchar(255)]
++    ref_id [varchar(36)]
++    version [bigint(20)]
+  )
+
+- tbl_processlinks (
+-    f_productsystem [varchar(36)]
+-    f_provideroutput [varchar(36)]
+-    f_providerprocess [varchar(36)]
+-    f_recipientinput [varchar(36)]
+-    f_recipientprocess [varchar(36)]
+-    id [varchar(36)]
+- )
+
+- tbl_product_cost_entries (
+-    amount [double]
+-    f_cost_category [varchar(36)]
+-    f_exchange [varchar(36)]
+-    f_flow_property [varchar(36)]
+-    f_process [varchar(36)]
+-    f_unit [varchar(36)]
+-    id [varchar(36)]
+- )
+
+- tbl_productsystem_process (
+-    f_process [varchar(36)]
+-    f_productsystem [varchar(36)]
+- )
+
+- tbl_productsystems (
+-    categoryid [varchar(36)]
+-    description [text]
+-    f_referenceexchange [varchar(36)]
+-    f_referenceprocess [varchar(36)]
+-    f_targetflowpropertyfactor [varchar(36)]
+-    f_targetunit [varchar(36)]
+-    id [varchar(36)]
+-    marked [text]
+-    name [varchar(255)]
+-    targetamount [double]
+- )
+
++ tbl_product_system_processes (
++    f_process [bigint(20)]
++    f_product_system [bigint(20)]
++ )
+
++ tbl_product_systems (
++    description [text]
++    f_category [bigint(20)]
++    f_reference_exchange [bigint(20)]
++    f_reference_process [bigint(20)]
++    f_target_flow_property_factor [bigint(20)]
++    f_target_unit [bigint(20)]
++    id [bigint(20)]
++    last_change [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    target_amount [double]
++    version [bigint(20)]
++ )
+
++ tbl_project_variants (
++    allocation_method [varchar(255)]
++    amount [double]
++    f_flow_property_factor [bigint(20)]
++    f_product_system [bigint(20)]
++    f_project [bigint(20)]
++    f_unit [bigint(20)]
++    id [bigint(20)]
++    name [varchar(255)]
++ )
+
+  tbl_projects (
+-    categoryid [varchar(36)]
+-    creationdate [date]
++    creation_date [timestamp]
+     description [text]
+-    f_author [varchar(36)]
++    f_author [bigint(20)]
+-    functionalunit [text]
++    f_category [bigint(20)]
++    f_impact_method [bigint(20)]
++    f_nwset [bigint(20)]
++    functional_unit [text]
+     goal [text]
+-    id [varchar(36)]
++    id [bigint(20)]
+-    lastmodificationdate [date]
++    last_change [bigint(20)]
++    last_modification_date [timestamp]
+     name [varchar(255)]
+-    productsystems [text]
++    ref_id [varchar(36)]
++    version [bigint(20)]
+  )
+
+- tbl_prosuite_codes (
+-    code [varchar(255)]
+-    f_reference [varchar(36)]
+-    type [varchar(255)]
+- )
+
+- tbl_scalingfactors (
+-    f_productsystem [varchar(36)]
+-    factor [double]
+-    id [varchar(36)]
+-    processid [varchar(36)]
+-    productid [varchar(36)]
+-    uncertainty [double]
+- )
+
+  tbl_sources (
+-    categoryid [varchar(36)]
+     description [text]
+     doi [varchar(255)]
++    external_file [varchar(255)]
++    f_category [bigint(20)]
+-    id [varchar(36)]
++    id [bigint(20)]
++    last_change [bigint(20)]
+     name [varchar(255)]
+-    textreference [text]
+-    year [smallint(6)]
++    ref_id [varchar(36)]
++    source_year [smallint(6)]
++    text_reference [text]
++    version [bigint(20)]
+  )
+
+- tbl_technologies (
+-    description [text]
+-    id [varchar(36)]
+- )
+
+- tbl_times (
+-    comment [text]
+-    enddate [date]
+-    id [varchar(36)]
+-    startdate [date]
+- )
+
+- tbl_unitgroups (
+-    categoryid [varchar(36)]
+-    description [text]
+-    f_defaultflowproperty [varchar(36)]
+-    f_referenceunit [varchar(36)]
+-    id [varchar(36)]
+-    name [varchar(255)]
+- )
+
++ tbl_unit_groups (
++    description [text]
++    f_category [bigint(20)]
++    f_default_flow_property [bigint(20)]
++    f_reference_unit [bigint(20)]
++    id [bigint(20)]
++    last_change [bigint(20)]
++    name [varchar(255)]
++    ref_id [varchar(36)]
++    version [bigint(20)]
++ )
+
+  tbl_units (
+-    conversionfactor [double]
++    conversion_factor [double]
+     description [text]
+-    f_unitgroup [varchar(36)]
++    f_unit_group [bigint(20)]
+-    id [varchar(36)]
++    id [bigint(20)]
+     name [varchar(255)]
++    ref_id [varchar(36)]
+     synonyms [varchar(255)]
+  )
+

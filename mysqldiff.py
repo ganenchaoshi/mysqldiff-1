@@ -1,5 +1,8 @@
-import mysql.connector
+import argparse
 import io
+import mysql.connector
+import sys
+
 
 htmlTemplate = """<!DOCTYPE HTML>
 <html>
@@ -26,6 +29,7 @@ htmlTemplate = """<!DOCTYPE HTML>
 		</script>
 	</body>
 </html>"""
+
 
 class DiffType:
 	
@@ -56,6 +60,7 @@ class Field:
 			return self.name == other.name
 		return False
 		
+		
 class Table:
 
 	def __init__(self, name):
@@ -71,18 +76,38 @@ class Table:
 			return self.name == other.name
 		return False
 		
-		
-oldDB = mysql.connector.connect(user='root', password='',
-                              host='127.0.0.1',
-                              database='openlca_beta3')
 
-newDB = mysql.connector.connect(user='root', password='',
-                              host='127.0.0.1',
-                              database='openlca_beta6')
+def main(oldConf, newConf, outFile):	
+	
+	oldDB = mysql.connector.connect(**oldConf)
+	newDB = mysql.connector.connect(**newConf)
+	oldCursor = oldDB.cursor()							  				  
+	newCursor = newDB.cursor() 
+	
+	oldTables = readTables(oldCursor)  
+	newTables = readTables(newCursor)
+	oldCursor.close()
+	newCursor.close()			  
+	oldDB.close()
+	newDB.close()
 
-							  
-oldCursor = oldDB.cursor()							  				  
-newCursor = newDB.cursor() 
+	diff = calcDiff(oldTables, newTables)
+	
+	if outFile is None:
+		text = get_diff_text(diff)
+		print(text)
+	else:
+		if outFile.endswith('html'):
+			text = get_diff_text(diff, True)
+			html = htmlTemplate.format(oldConf["database"], newConf["database"], text)
+			htmlFile = open(outFile, 'w')
+			htmlFile.write(html)
+			htmlFile.close()
+		else:
+			text = get_diff_text(diff)
+			textFile = open(outFile, 'w')
+			textFile.write(text)
+			textFile.close()
 
 
 def readTables(cursor):
@@ -213,9 +238,10 @@ def tagTable(table, diffType):
 	table.diffType = diffType
 	for field in table.fields:
 		field.diffType = diffType
-	
 
-def writeDiff(diff, writer, compact = False):
+	
+def get_diff_text(diff, compact = False):
+	writer = io.StringIO()
 	lineBreak = "\\n" if compact else "\n"
 	for table in diff:
 		tableHead = "%s %s (" %  (DiffType.asPrefix(table.diffType), table.name)
@@ -230,26 +256,84 @@ def writeDiff(diff, writer, compact = False):
 		writer.write(tableFooter) 
 		writer.write(lineBreak)
 		writer.write(lineBreak)
-			
+	diffText = writer.getvalue()
+	writer.close()
+	return diffText	
+
+
+def read_config(confString, arg, parser):
+	"""
+	Reads the database connection arguments from the configuration string. 
+	The string should have the format 
+		host:port/database?user=user&password=password
+	See also http://dev.mysql.com/doc/connector-python/en/
+	connector-python-connectargs.html.
+	"""
+	if confString is None:
+		print("ERROR: %s is not defined" % arg)
+		parser.print_help()
+		sys.exit(0)
+	 
+	config = {}
+	hostStr = None
+	pathStr = None
+	queryStr = None
+	if '/' in confString:
+		s = confString.split('/') 
+		hostStr = s[0]
+		pathStr = s[1]
+	else:
+		pathStr = confString
+	
+	if '?' in pathStr:
+		s = pathStr.split('?')
+		pathStr = s[0]
+		queryStr = s[1]
+	
+	config["database"] = pathStr
+	
+	if hostStr is not None:
+		if ':' in hostStr:
+			s = hostStr.split(':')
+			config["host"] = s[0]
+			config["port"] = s[1]
+		else:
+			config["host"] = hostStr
+	
+	if queryStr is None:
+		config["user"] = "root"
+		config["password"] = ""
+	else:
+		s = queryStr.split('&')
+		for pair in s:
+			if '=' in pair:
+				(key, sep, value) = pair.partition('=')
+				config[key] = value
+	
+	if not "user" in config.keys():
+		config["user"] = "root"
+	
+	if not "password" in config.keys():
+		config["password"] = ""
+	
+	return config
 		
-oldTables = readTables(oldCursor)  
-newTables = readTables(newCursor)
-oldCursor.close()
-newCursor.close()			  
-oldDB.close()
-newDB.close()
+if __name__ == '__main__':
 
-diff = calcDiff(oldTables, newTables)
-writer = io.StringIO()
-writeDiff(diff, writer, True)
-diffText = writer.getvalue()
-writer.close()
-
-html = htmlTemplate.format("old_database_name", "new_database_name", diffText)
-
-htmlFile = open("test.html", 'w')
-htmlFile.write(html)
-htmlFile.close()
+	parser = argparse.ArgumentParser(
+		description='mysqldiff: calculate the diff between two MySQL databases')
+	parser.add_argument('-old', dest='oldDb', help='the connection to the old database')
+	parser.add_argument('-new', dest='newDb', help='the connection to the new database')
+	parser.add_argument('-out', dest='outFile', 
+		help='the path to the output file where the diff should be stored (html or text)')
+	args = parser.parse_args()
+	
+	oldConf = read_config(args.oldDb, 'OLDDB', parser)
+	newConf = read_config(args.newDb, 'NEWDB', parser)
+		
+	main(oldConf, newConf, args.outFile)
+	
+	
 
   
   
